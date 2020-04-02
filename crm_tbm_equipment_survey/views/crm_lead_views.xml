@@ -8,6 +8,27 @@
             <xpath expr="/form/sheet/notebook/page" position="before">
                 <page string="Equipment Survey">
                     <field name="crm_equipment_survey_ids" />
+                    <group string="Stockroom">
+                        <group>
+                            <field name="stockroom_bottle" />
+                            <field name="stockroom_bottle_shelf" />
+                            <field name="stockroom_shelf" />
+                            <field name="stockroom_shelf_measurement" />
+                            <field name="stockroom_camera" />
+                            <field name="stockroom_shelf_material" />
+                        </group>
+                        <group>
+                            <field name="stockroom_switch" />
+                            <field name="stockroom_structure" />
+                            <field name="stockroom_source" />
+                            <field name="stockroom_unit" />
+                            <field name="stockroom_bottle_month" />
+                            <field name="stockroom_detail" widget="pad" />
+                        </group>
+                    </group>
+                    <group string="Server Room">
+                        <field name="server_description" widget="pad" />
+                    </group>
                 </page>
             </xpath>
         </field>
@@ -29,41 +50,43 @@
         <field name="model">crm.equipment.survey</field>
         <field name="arch" type="xml">
             <form string="Bar">
-                <group>
+                <sheet>
                     <group>
-                        <field name="name" />
-                        <field name="status" widget="radio" options="{'horizontal': true}"/>
+                        <group>
+                            <field name="name" />
+                            <field name="status" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <field name="location"/>
+                        </group>
+                    </group>
+                    <group string="Backbar">
+                        <group>
+                            <field name="back_bar_bottle" widget="integer"/>
+                            <field name="back_bar_shelf"/>
+                            <field name="back_bar_shelf_length"/>
+                            <field name="back_bar_shelf_depth"/>
+                            <field name="back_bar_shelf_height"/>
+                        </group>
+                        <group>
+                            <field name="back_bar_scale"/>
+                            <field name="back_bar_bottle_deep"/>
+                            <field name="back_bar_shelf_structure"/>
+                            <field name="back_bar_power_source"/>
+                            <field name="back_bar_area_size"/>
+                            <field name="back_bar_shelf_material"/>
+                        </group>
                     </group>
                     <group>
-                        <field name="location"/>
-                    </group>
-                </group>
-                <group string="Backbar">
-                    <group>
-                        <field name="back_bar_bottle" widget="integer"/>
-                        <field name="back_bar_shelf"/>
-                        <field name="back_bar_shelf_length"/>
-                        <field name="back_bar_shelf_depth"/>
-                        <field name="back_bar_shelf_height"/>
+                        <field name="back_bar_detail" widget="pad"/>
                     </group>
                     <group>
-                        <field name="back_bar_scale"/>
-                        <field name="back_bar_bottle_deep"/>
-                        <field name="back_bar_shelf_structure"/>
-                        <field name="back_bar_power_source"/>
-                        <field name="back_bar_area_size"/>
-                        <field name="back_bar_shelf_material"/>
+                        <field name="back_bar_description" widget="pad"/>
                     </group>
-                </group>
-                <group>
-                    <field name="back_bar_detail" widget="pad"/>
-                </group>
-                <group>
-                    <field name="back_bar_description" widget="pad"/>
-                </group>
-                <group>
-                    <field name="back_bar_note" widget="pad"/>
-                </group>
+                    <group>
+                        <field name="back_bar_note" widget="pad"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
