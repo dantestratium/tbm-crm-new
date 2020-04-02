@@ -1,4 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <record id="crm_tbm_quote_calculator_form_sr" model="ir.ui.view">
+        <field name="name">crm.tbm.quote.calculator.form.sr</field>
+        <field name="model">crm.quote.calculator</field>
+        <field name="inherit_id" ref="crm_tbm_quote_calculator.crm_tbm_quote_calculator_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group[@id='speedrail_quote']" position="inside">
+                <field name="crm_quote_calculator_sr_ids" nolabel="1">
+                    <tree create="false" delete="false">
+                        <field name="name" />
+                        <field name="bottle_1" />
+                        <field name="sr_2" />
+                        <field name="camera" />
+                    </tree>
+                    <form string="Speedrail Quote Calculation" create="false" delete="false">
+                        <sheet>
+                            <group>
+                                <group attrs="{'invisible': [('bottle_1', '&lt;=', 0)]}">
+                                    <h4>Calculating by No. of Bottles</h4>
+                                    <field name="bottle_1" />
+                                    <field name="sr_1" readonly="1" force_save="1" />
+                                    <field name="camera" />
+                                    <field name="device_sr_1" readonly="1" force_save="1" />
+                                    <field name="switch_1" readonly="1" force_save="1" />
+                                </group>
+                                <group attrs="{'invisible': [('sr_2', '&lt;=', 0)]}">
+                                    <h4>Calculating by No. of Speedrails</h4>
+                                    <field name="sr_2" />
+                                    <field name="bottle_2" readonly="1" force_save="1" />
+                                    <field name="camera" />
+                                    <field name="device_sr_2" readonly="1" force_save="1" />
+                                    <field name="switch_2" readonly="1" force_save="1" />
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>
+                </field>
+            </xpath>
+        </field>
+    </record>
 </odoo>
