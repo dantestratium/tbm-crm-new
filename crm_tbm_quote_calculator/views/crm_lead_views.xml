@@ -6,7 +6,20 @@
         <field name="inherit_id" ref="crm_tbm_equipment_survey.tree_view_crm_tbm_equipment_survey"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='location']" position="after">
-                <field name="crm_quote_calculator_id" widget="many2one" />
+                <field name="crm_quote_calculator_id" widget="many2one" force_save="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="crm_tbm_advanced.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='commitment_date']" position="before">
+                <field name="crm_quote_calculator_id" />
+                <field name="crm_quote_calculator_bar" string="Name of Bar" />
+                <field name="crm_quote_calculator_loc" />
             </xpath>
         </field>
     </record>
@@ -21,25 +34,75 @@
         </field>
     </record>
 
+    <record id="sale_action_quotations_new" model="ir.actions.act_window">
+        <field name="name">Quotation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">form,tree,graph</field>
+    </record>
+
     <record id="crm_tbm_quote_calculator_form" model="ir.ui.view">
         <field name="name">crm.tbm.quote.calculator.form</field>
         <field name="model">crm.quote.calculator</field>
         <field name="arch" type="xml">
-            <form string="Quote Calculation">
+            <form string="Quote Calculation" create="false">
                 <header>
-                    <button string="Convert to Quotation" name="close_dialog" type="object" class="btn-primary"/>
+                    <field name="crm_lead_id" invisible="1"/>
+                    <field name="crm_lead_partner" invisible="1"/>
+                    <field name="crm_lead_team" invisible="1"/>
+                    <field name="crm_lead_active" invisible="1"/>
+                    <field name="quote_count" invisible="1"/>
+                    <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
+                        domain="[('opportunity_id', '=', crm_lead_id)]" attrs="{'invisible': [('quote_count', '&gt;', 0)]}"
+                        context="{'search_default_partner_id': crm_lead_partner,
+                                 'default_crm_quote_calculator_id': active_id,
+                                 'default_partner_id': crm_lead_partner,
+                                 'search_default_opportunity_id': crm_lead_id,
+                                 'default_opportunity_id': crm_lead_id,
+                                 'default_team_id': crm_lead_team}"/>
                 </header>
                 <sheet>
-                    <group string="Speedrails">
-
+                    <group>
+                        <field name="sale_order_id" attrs="{'invisible': [('quote_count', '=', 0)]}" />
+                        <field name="crm_equipment_survey_id" widget="many2one" readonly="1" />
+                        <field name="survey_location" />
+                        <field name="survey_construction" />
+                    </group>
+                    <group string="Speedrails" id="speedrail_quote">
                     </group>
                     <group string="Back Bar">
-                        <group>
-
+                        <group attrs="{'invisible': [('back_bar_bottle', '&lt;=', 0)]}">
+                            <h4>Calculating by No. of Bottles</h4>
+                            <field name="back_bar_bottle"/>
+                            <field name="shelf_node_1" readonly="1" force_save="1" />
+                            <field name="shelf_master_1" readonly="1" force_save="1" />
+                            <field name="shelf_square_1" readonly="1" force_save="1" />
+                            <field name="back_bar_shelf" />
+                            <field name="total_shelf_device_loc_1" readonly="1" force_save="1" />
+                            <field name="shelf_master_loc_1" readonly="1" force_save="1" />
+                            <field name="shelf_node_loc_1" readonly="1" force_save="1" />
+                            <field name="square_loc_1" readonly="1" force_save="1" />
+                            <field name="back_bar_scale" />
+                            <field name="total_backbar_1" readonly="1" force_save="1" />
+                            <field name="switch_1" readonly="1" force_save="1" />
                         </group>
-                        <group>
-                            <h5>Calculating by Shelf Size (inches)</h5>
-                            <field name="name" />
+                        <group attrs="{'invisible': [('back_bar_shelf_length', '&lt;=', 0)]}">
+                            <h4>Calculating by Shelf Size (inches)</h4>
+                            <field name="back_bar_shelf_length" required="1" />
+                            <field name="shelf_length_bottle" readonly="1" force_save="1" />
+                            <field name="back_bar_shelf_depth" />
+                            <field name="shelf_length_row" readonly="1" force_save="1" />
+                            <field name="total_shelf_device" readonly="1" force_save="1" />
+                            <field name="shelf_master_2" readonly="1" force_save="1" />
+                            <field name="shelf_node_2"  readonly="1" force_save="1" />
+                            <field name="shelf_square_2" readonly="1" force_save="1" />
+                            <field name="back_bar_shelf" />
+                            <field name="total_shelf_device_loc_2" readonly="1" force_save="1" />
+                            <field name="shelf_master_loc_2" readonly="1" force_save="1" />
+                            <field name="shelf_node_loc_2" readonly="1" force_save="1" />
+                            <field name="square_loc_2" readonly="1" force_save="1" />
+                            <field name="back_bar_scale" />
+                            <field name="total_backbar_2" readonly="1" force_save="1" />
+                            <field name="switch_2" readonly="1" force_save="1" />
                         </group>
                     </group>
                 </sheet>

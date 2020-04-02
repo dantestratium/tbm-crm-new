@@ -8,7 +8,8 @@
     'author': "Stratium Software Group",
     'website': "http://www.stratiumsoftware.com",
     'depends': [
-        'crm_tbm_equipment_survey'
+        'crm_tbm_equipment_survey',
+        'crm_tbm_advanced'
     ],
     'data': [
         'security/ir.model.access.csv',
