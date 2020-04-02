@@ -8,7 +8,8 @@
     'author': "Stratium Software Group",
     'website': "http://www.stratiumsoftware.com",
     'depends': [
-        'crm'
+        'crm',
+        'sale',
     ],
     'data': [
         'security/ir.model.access.csv',
