@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="custom_css" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/crm_tbm_advanced/static/src/scss/tbm_custom.scss"/>
+        </xpath>
+    </template>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">view.order.form.tbm</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group" position="replace">
+                <group>
+                    <group>
+                        <field name="establishment_name" string="Name of Establishment" />
+                        <field name="country_id" invisible="1" />
+                        <label for="bar_street" string="Address"/>
+                        <div class="o_address_format">
+                            <field name="bar_street" placeholder="Street..." class="o_address_street"/>
+                            <field name="bar_city" placeholder="City" class="o_address_city"/>
+                            <field name="bar_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                            <field name="bar_zip" placeholder="ZIP" class="o_address_zip"/>
+                            <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        </div>
+
+                        <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}' invisible="1"/>
+                        <field name="partner_shipping_id" string="Installation Address" groups="sale.group_delivery_invoice_address" domain="[('type', '=', 'delivery')]" context="{'default_type':'delivery', 'default_parent_id': partner_id, 'default_country_id': 233}" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="partner_id" string="Contact Name" widget="res_partner_many2one" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 0, 'show_vat': True}" options='{"always_reload": True}'/>
+                        <field name="contact_email" />
+                        <field name="contact_phone" widget="phone" />
+                        <field name="contact_mobile" />
+                    </group>
+                    <group>
+                        <field name="commitment_date" string="Installation Date" groups="sale.group_sale_order_dates"/>
+                        <label for="install_street" string="Installation Address"/>
+                        <div class="o_address_format">
+                            <field name="install_street" placeholder="Street..." class="o_address_street"/>
+                            <field name="install_city" placeholder="City" class="o_address_city"/>
+                            <field name="install_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                            <field name="install_zip" placeholder="ZIP" class="o_address_zip"/>
+                            <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
+                        <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>
+                        <field name="user_id"/>
+                        <field name="team_id" options="{'no_create': True}"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
