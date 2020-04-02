@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_view_crm_tbm_equipment_survey_quote" model="ir.ui.view">
+        <field name="name">tree.view.crm.tbm.equipment.survey.quote</field>
+        <field name="model">crm.equipment.survey</field>
+        <field name="inherit_id" ref="crm_tbm_equipment_survey.tree_view_crm_tbm_equipment_survey"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location']" position="after">
+                <field name="crm_quote_calculator_id" widget="many2one" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tree_view_crm_tbm_quote_calculator" model="ir.ui.view">
+        <field name="name">tree.view.crm.tbm.quote.calculator</field>
+        <field name="model">crm.quote.calculator</field>
+        <field name="arch" type="xml">
+            <tree string="Quote Calculation">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_tbm_quote_calculator_form" model="ir.ui.view">
+        <field name="name">crm.tbm.quote.calculator.form</field>
+        <field name="model">crm.quote.calculator</field>
+        <field name="arch" type="xml">
+            <form string="Quote Calculation">
+                <header>
+                    <button string="Convert to Quotation" name="close_dialog" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group string="Speedrails">
+
+                    </group>
+                    <group string="Back Bar">
+                        <group>
+
+                        </group>
+                        <group>
+                            <h5>Calculating by Shelf Size (inches)</h5>
+                            <field name="name" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

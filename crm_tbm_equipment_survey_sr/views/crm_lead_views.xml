@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_tbm_equipment_survey_form_sr" model="ir.ui.view">
+        <field name="name">crm_tbm_equipment_survey_form_sr</field>
+        <field name="model">crm.equipment.survey</field>
+        <field name="inherit_id" ref="crm_tbm_equipment_survey.crm_tbm_equipment_survey_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group[1]" position="after">
+                <group>
+                    <field name="crm_equipment_survey_sr_ids" widget="one2many_tags" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tree_view_crm_tbm_equipment_survey_sr" model="ir.ui.view">
+        <field name="name">tree.view.crm.tbm.equipment.survey.sr</field>
+        <field name="model">crm.equipment.survey.sr</field>
+        <field name="arch" type="xml">
+            <tree string="Speedrails">
+                <field name="name" />
+                <field name="count" />
+                <field name="bottle" />
+                <field name="camera" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_tbm_equipment_survey_sr_form" model="ir.ui.view">
+        <field name="name">crm.tbm.equipment.survey.form.sr</field>
+        <field name="model">crm.equipment.survey.sr</field>
+        <field name="arch" type="xml">
+            <form string="Speedrail">
+                <group>
+                    <group>
+                        <field name="crm_equipment_survey_id" attrs="{'invisible': True}" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" />
+                        <field name="name" attrs="{'invisible': True}" />
+                        <field name="count" />
+                        <field name="bottle"/>
+                        <field name="deep"/>
+                        <field name="camera"/>
+                    </group>
+                    <group>
+                        <field name="measurement"/>
+                        <field name="bar_area_size"/>
+                        <field name="pos_register"/>
+                        <field name="pos_supplier"/>
+                        <field name="power_source"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="note" widget="pad"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

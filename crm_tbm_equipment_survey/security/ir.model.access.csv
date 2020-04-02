@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_tbm_equipment_survey_manager,access_crm_equipment_survey_manager,model_crm_equipment_survey,sales_team.group_sale_manager,1,1,1,1
+access_crm_tbm_equipment_survey_salesman,access_crm_equipment_survey_salesman,model_crm_equipment_survey,sales_team.group_sale_salesman,1,0,0,0
+access_crm_tbm_equipment_survey_account,access_crm_tbm_equipment_survey_account,model_crm_equipment_survey,account.group_account_invoice,1,0,0,0

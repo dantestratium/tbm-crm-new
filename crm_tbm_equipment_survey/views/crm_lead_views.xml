@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_case_form_view_oppor" model="ir.ui.view">
+        <field name="name">crm.lead.form.opportunity.tbm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook/page" position="before">
+                <page string="Equipment Survey">
+                    <field name="crm_equipment_survey_ids" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tree_view_crm_tbm_equipment_survey" model="ir.ui.view">
+        <field name="name">tree.view.crm.tbm.equipment.survey</field>
+        <field name="model">crm.equipment.survey</field>
+        <field name="arch" type="xml">
+            <tree string="Bars">
+                <field name="name" />
+                <field name="location" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_tbm_equipment_survey_form" model="ir.ui.view">
+        <field name="name">crm.tbm.equipment.survey.form</field>
+        <field name="model">crm.equipment.survey</field>
+        <field name="arch" type="xml">
+            <form string="Bar">
+                <group>
+                    <group>
+                        <field name="name" />
+                        <field name="status" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                    <group>
+                        <field name="location"/>
+                    </group>
+                </group>
+                <group string="Backbar">
+                    <group>
+                        <field name="back_bar_bottle" widget="integer"/>
+                        <field name="back_bar_shelf"/>
+                        <field name="back_bar_shelf_length"/>
+                        <field name="back_bar_shelf_depth"/>
+                        <field name="back_bar_shelf_height"/>
+                    </group>
+                    <group>
+                        <field name="back_bar_scale"/>
+                        <field name="back_bar_bottle_deep"/>
+                        <field name="back_bar_shelf_structure"/>
+                        <field name="back_bar_power_source"/>
+                        <field name="back_bar_area_size"/>
+                        <field name="back_bar_shelf_material"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="back_bar_detail" widget="pad"/>
+                </group>
+                <group>
+                    <field name="back_bar_description" widget="pad"/>
+                </group>
+                <group>
+                    <field name="back_bar_note" widget="pad"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>
