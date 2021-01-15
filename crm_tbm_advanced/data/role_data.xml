@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="group_tbm_crm_admin" model="res.groups">
+        <field name="name">CRM - Administrator</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_crm_manager" model="res.groups">
+        <field name="name">CRM - Manager</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_crm_salesperson" model="res.groups">
+        <field name="name">CRM - Salesperson</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_finance_admin" model="res.groups">
+        <field name="name">Finance - Administrator</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_finance_manager" model="res.groups">
+        <field name="name">Finance - Manager</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_finance_receivables" model="res.groups">
+        <field name="name">Finance - Receivables</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_finance_payable" model="res.groups">
+        <field name="name">Finance - Payable</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_materials_admin" model="res.groups">
+        <field name="name">Materials - Administrator</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_materials_manager" model="res.groups">
+        <field name="name">Materials - Manager</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_installation" model="res.groups">
+        <field name="name">Installation</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_project_manager" model="res.groups">
+        <field name="name">Project - Manager</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+
+    <record id="group_tbm_project_user" model="res.groups">
+        <field name="name">Project - User</field>
+        <field name="category_id" ref="base.module_category_extra"/>
+    </record>
+</odoo>

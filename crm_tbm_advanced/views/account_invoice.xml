@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/crm_tbm_advanced/static/src/js/tour.js" />
+            <script type="text/javascript" src="/crm_tbm_advanced/static/src/js/user_menu.js" />
+        </xpath>
+    </template>
+
+    <record id="tbm_view_invoice_form" model="ir.ui.view">
+        <field name="name">tbm.view.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_mode_id']" position="after">
+                <field name="loan_vendor_id" readonly="1" />
+            </xpath>
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_view_payments"
+                                    string="View Payments" type="object" icon="fa-bars"/>
+            </div>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='transmit_method_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_type_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_mode_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tbm_view_sale_advance_payment_inv" model="ir.ui.view">
+        <field name="name">tbm.view.sale.advance.payment_inv</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/footer/button[@name='create_invoices']" position="before">
+                <field name="loan_vendor_id" invisible="1" />
+            </xpath>
+            <xpath expr="//form/footer/button[@name='create_invoices']" position="attributes">
+                <attribute name="context">{'open_invoices': True, 'loan_vendor_id': loan_vendor_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_invoice_form" model="ir.ui.view">
+        <field name="name">account.payment.invoice.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
+        <field name="arch" type="xml">
+            <button name="action_validate_invoice_payment" position="before">
+                <button name="action_draft" class="oe_highlight"
+                        string="Save Draft" type="object"
+                        groups="account.group_account_invoice"/>
+            </button>
+            <button name="action_validate_invoice_payment" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </button>
+            <button name="post_and_open_payment" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <button name="post" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>

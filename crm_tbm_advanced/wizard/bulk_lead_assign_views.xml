@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_bulk_lead_assign" model="ir.ui.view">
+        <field name="name">bulk.lead.assign.form</field>
+        <field name="model">bulk.lead.assign</field>
+        <field name="arch" type="xml">
+            <form string="Assign to Team">
+                <p class="oe_grey">
+                    Assign selected leads to a salesperson or team.
+                </p>
+                <group>
+                    <field name="salesperson_id" domain="[('id', '!=', uid)]" />
+                    <field name="sales_team_id" />
+                </group>
+                <footer>
+                    <button name="assign_leads" string="Assign" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window
+        id="action_bulk_lead_assign_act"
+        multi="True"
+        key2="client_action_multi" name="Assign to Salesperson/Team"
+        res_model="bulk.lead.assign" src_model="crm.lead"
+        view_mode="form" target="new" view_type="form"
+        context="{'mass_convert' : True}"
+        view_id="view_bulk_lead_assign"
+        groups="sales_team.group_sale_manager,sales_team_security.group_sale_team_manager"
+    />
+</odoo>

@@ -5,9 +5,13 @@
         <field name="model">crm.equipment.survey</field>
         <field name="inherit_id" ref="crm_tbm_equipment_survey.crm_tbm_equipment_survey_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/sheet/group[1]" position="after">
-                <group>
-                    <field name="crm_equipment_survey_sr_ids" widget="one2many_tags" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" />
+            <xpath expr="//form/sheet/notebook/page/group[1]" position="after">
+                <div class="o_horizontal_separator">Speedrails</div>
+                <field name="crm_equipment_survey_sr_ids" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" />
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page/group[3]" position="after">
+                <group string="Server Room">
+                    <field name="server" readonly="1" />
                 </group>
             </xpath>
         </field>
@@ -17,8 +21,8 @@
         <field name="name">tree.view.crm.tbm.equipment.survey.sr</field>
         <field name="model">crm.equipment.survey.sr</field>
         <field name="arch" type="xml">
-            <tree string="Speedrails">
-                <field name="name" />
+            <tree>
+                <field name="name" string="Location" />
                 <field name="count" />
                 <field name="bottle" />
                 <field name="camera" />
@@ -32,26 +36,47 @@
         <field name="arch" type="xml">
             <form string="Speedrail">
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="crm_equipment_survey_id" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" invisible="1" />
-                            <field name="name" invisible="1" />
-                            <field name="count" />
-                            <field name="bottle"/>
-                            <field name="deep"/>
-                            <field name="camera"/>
-                        </group>
-                        <group>
-                            <field name="measurement"/>
-                            <field name="bar_area_size"/>
-                            <field name="pos_register"/>
-                            <field name="pos_supplier"/>
-                            <field name="power_source"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="note" widget="pad"/>
-                    </group>
+                    <notebook style="margin-top: -17px">
+                        <page string="Speedrail Survey">
+                            <group>
+                                <field name="name" string="Speedrail Location" />
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="crm_equipment_survey_id" context="{'default_crm_equipment_survey_id': id,'search_default_crm_equipment_survey_id': [id]}" invisible="1" />
+                                    <field name="sr_calculate_by" widget="radio" options="{'horizontal': true}" />
+                                    <field name="count" attrs="{'invisible': [('sr_calculate_by', '=', 'bottle')]}" />
+                                    <field name="bottle" attrs="{'invisible': [('sr_calculate_by', '=', 'sr')]}" />
+                                    <field name="camera"/>
+                                    <field name="deep"/>
+                                </group>
+                                <group>
+                                    <field name="measurement"/>
+                                    <field name="bar_area_size"/>
+                                    <field name="pos_register"/>
+                                    <field name="pos_supplier"/>
+                                    <field name="power_source"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="note" widget="pad"/>
+                            </group>
+                        </page>
+                        <page string="Speedrail Calculation" attrs="{'invisible': ['|', ('device', '&lt;=', 1)]}">
+                            <field name="sr_calculate_by" invisible="1"/>
+                            <group>
+                                <div>
+                                    <h4 attrs="{'invisible': [('sr_calculate_by', '=', 'sr')]}"><em>Calculating by No. of Bottles</em></h4>
+                                    <h4 attrs="{'invisible': [('sr_calculate_by', '=', 'bottle')]}"><em>Calculating by No. of Speedrails</em></h4>
+                                </div>
+                                <field name="count" readonly="1" force_save="1" help="No. of Bottles / 5"/>
+                                <field name="bottle" readonly="1" force_save="1" help="No. of Speedrails * 5" />
+                                <field name="camera" readonly="1" force_save="1" />
+                                <field name="device" readonly="1" force_save="1" help="No. of Bottles + No. of Cameras" />
+                                <field name="switch" readonly="1" force_save="1" help="No. of Devices for Speedrail / 24" />
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

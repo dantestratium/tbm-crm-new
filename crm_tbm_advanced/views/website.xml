@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="custom_sign_in" customize_show="True" inherit_id="website.layout" name="Custom Sign In">
+            <xpath expr="//ul[@id='top_menu']/li" position="after">
+                <li class="nav-item" t-if="website.user_id == user_id">
+                    <a role="menuitem" class="nav-link" href="/web/login">
+                        <span>Log in</span>
+                    </a>
+                </li>
+            </xpath>
+        </template>
+    </data>
+</odoo>

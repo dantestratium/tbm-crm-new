@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit_sale_managementx" name="Order Options" inherit_id="sale_management.sale_order_portal_content_inherit_sale_management">
+         <xpath expr="//t[@t-if='any([(not option.line_id) for option in sale_order.sale_order_option_ids])']/section" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+    </template>
+
+    <template id="mail_notification_paynow_onlinex" inherit_id="sale.mail_notification_paynow_online" name="oezirhgoi1">
+        <xpath expr="//t[@t-set='access_name']" position="after">
+            <t t-if="record._name == 'sale.order'">
+                <t t-set="access_name">View Sale Order</t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

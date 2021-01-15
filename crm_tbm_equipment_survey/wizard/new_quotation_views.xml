@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_crm_new_quotation" model="ir.ui.view">
+        <field name="name">view.crm.new.quotation.form</field>
+        <field name="model">crm.survey.new.quotation</field>
+        <field name="arch" type="xml">
+            <form string="New Quotation">
+                <group>
+                    <field name="crm_lead_id" invisible="1" />
+                    <field name="crm_lead_partner" invisible="1" />
+                    <field name="date_installation" invisible="1" />
+                    <field name="crm_survey_ids" help="Select which Bars to be included in quotation." string="Bars"
+                           widget="many2many_tags" options="{'no_create': True, 'no_open':True}"
+                           domain="[('crm_lead_id', '=', crm_lead_id),('type', '=', 'bar')]"/>
+                    <field name="crm_survey_stockroom_ids" help="Select which Stockrooms to be included in quotation." string="Stockrooms"
+                           widget="many2many_tags" options="{'no_create': True, 'no_open':True}"
+                           domain="[('crm_lead_id', '=', crm_lead_id),('type', '=', 'stockroom')]"/>
+                </group>
+                <footer>
+                    <button string="Create and View Quotation" name="%(sale_crm.sale_action_quotations_new)d" type="action" class="oe_highlight"
+                        context="{'search_default_partner_id': crm_lead_partner,
+                                  'default_partner_id': crm_lead_partner,
+                                  'default_opportunity_id': crm_lead_id,
+                                  'default_bars': crm_survey_ids,
+                                  'default_lead_copy': crm_lead_id,
+                                  'default_commitment_date': date_installation,
+                                  'default_stockrooms': crm_survey_stockroom_ids}"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crm_new_quotation" model="ir.actions.act_window">
+        <field name="name">New Quotation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.survey.new.quotation</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_new_quotation"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_crm_new_survey" model="ir.actions.act_window">
+        <field name="name">New Equipment Survey</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.equipment.survey</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_tbm_equipment_survey_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

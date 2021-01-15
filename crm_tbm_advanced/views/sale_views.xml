@@ -1,20 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_backend" name="custom_css" inherit_id="web.assets_backend">
+    <template id="assets_common" name="tbm_custom_css" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/crm_tbm_advanced/static/src/scss/tbm_custom.scss"/>
         </xpath>
     </template>
+
+    <record id="view_order_form_invoice" model="ir.ui.view">
+        <field name="name">view.order.form.tbm.invoice</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="attributes">
+                <attribute name="groups">account.group_account_invoice</attribute>
+                <attribute name="context">{'default_loan_vendor_id': selected_vendor_id}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="after">
+                <field name="selected_vendor_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">view_order_form_inherit_sale_stock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_stock.view_order_form_inherit_sale_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_delivery']" position="attributes">
+                <attribute name="groups">sales_team.group_sale_manager, crm_tbm_advanced.group_tbm_crm_admin, crm_tbm_advanced.group_tbm_crm_manager, crm_tbm_advanced.group_tbm_materials_admin, crm_tbm_advanced.group_tbm_materials_manager, crm_tbm_advanced.group_tbm_installation</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_view_invoice']" position="attributes">
+                <attribute name="groups">account.group_account_user, crm_tbm_advanced.group_tbm_finance_manager, crm_tbm_advanced.group_tbm_finance_admin, crm_tbm_advanced.group_tbm_finance_receivables</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_crm_case_form_view_oppor" model="ir.ui.view">
+        <field name="name">sale.crm.lead.form.opportunity.tbm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="sale_crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='658']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
 
     <record id="view_order_form" model="ir.ui.view">
         <field name="name">view.order.form.tbm</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[1]" position="after">
+                <button name="%(crm_tbm_advanced.action_send_application)d" string="Loan Applications" class="btn-primary oe_read_only" context="{'default_sale_order_id': id,'search_default_sale_order_id': [id]}" type="action" attrs="{'invisible': ['|', ('vendor_application_flag', '=', True), ('state', '=', 'draft')]}" />
+            </xpath>
+            <xpath expr="//button[@id='action_confirm']" position="replace">
+                <button name="action_confirm" id="action_confirm"
+                        string="Confirm" class="btn-primary" type="object"
+                        attrs="{'invisible': [('state', 'in', ['draft', 'sale'])]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="replace">
+                <button name="action_confirm"
+                        string="Confirm" type="object"
+                        attrs="{'invisible': [('state', 'in', ['draft', 'sale', 'sent'])]}"/>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page/group/group[@name='sales_person']" position="attributes">
+                <attribute name="groups">account.group_account_invoice</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[2]" position="after">
+                <page string="Loan Applications (In Process)" attrs="{'invisible': [('state', 'not in', ['sent', 'sale'])]}">
+                    <field name="vendor_application_ids" widget="one2many_tags" context="{'default_sale_order_id': id,'search_default_sale_order_id': [id]}" />
+                    <field name="vendor_application_flag" invisible="1" />
+                </page>
+            </xpath>
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['sent']), ('vendor_application_flag', '!=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']/field[1]" position="attributes">
+                <attribute name="limit">9999</attribute>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[3]" position="after">
+                <page string="Estimated Payments">
+                    <group>
+                        <field name="calc_amount" />
+                        <field name="calc_term" invisible="1" />
+                    </group>
+                    <group>
+                        <group string="Low Estimated Payments">
+                            <field name="calc_12m" readonly="1" />
+                            <field name="calc_24m" readonly="1" />
+                            <field name="calc_36m" readonly="1" />
+                            <field name="calc_48m" readonly="1" />
+                            <field name="calc_60m" readonly="1" />
+                        </group>
+                        <group string="High Estimated Payments">
+                            <field name="calc_12m_1" readonly="1" />
+                            <field name="calc_24m_1" readonly="1" />
+                            <field name="calc_36m_1" readonly="1" />
+                            <field name="calc_48m_1" readonly="1" />
+                            <field name="calc_60m_1" readonly="1" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//form/sheet/notebook/page[@name='order_lines']/field[@name='order_line']/form/group/group/field[@name='product_id']" position="replace">
+                <field
+                    name="product_id"
+                    attrs="{
+                        'readonly': [('product_updatable', '=', False)],
+                        'required': [('display_type', '=', False)],
+                    }"
+                    force_save="1"
+                    domain="[('sale_ok', '=', True)]"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,
+                        'uom':product_uom,
+                        'company_id': parent.company_id,
+                        'default_lst_price': price_unit,
+                        'default_description_sale': name
+                    }"
+                />
+            </xpath>
             <xpath expr="//form/sheet/group" position="replace">
                 <group>
                     <group>
                         <field name="establishment_name" string="Name of Establishment" />
+                        <field name="selected_vendor_id" invisible="1" />
                         <field name="country_id" invisible="1" />
                         <label for="bar_street" string="Address"/>
                         <div class="o_address_format">
@@ -35,7 +149,7 @@
                         <field name="contact_mobile" />
                     </group>
                     <group>
-                        <field name="commitment_date" string="Installation Date" groups="sale.group_sale_order_dates"/>
+                        <field name="commitment_date" string="Installation Date" required="1"/>
                         <label for="install_street" string="Installation Address"/>
                         <div class="o_address_format">
                             <field name="install_street" placeholder="Street..." class="o_address_street"/>
@@ -44,6 +158,24 @@
                             <field name="install_zip" placeholder="ZIP" class="o_address_zip"/>
                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                         </div>
+                        <field name="id" invisible="1"/>
+                            <field name="available_carrier_ids" invisible="1"/>
+                            <field name="delivery_method_count" invisible="1"/>
+                            <label for="carrier_id"/>
+                            <div name='carrier_selection'>
+                                <div>
+                                    <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" role="img" aria-label="Rating OK" title="Rating OK" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
+                                </div>
+                                <div>
+                                    <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
+                                    <button name="get_delivery_price" type="object" class="oe_inline oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"><i class="fa fa-arrow-right"/> Get rate</button>
+                                    <button name="set_delivery_line" type="object" class="oe_inline oe_link" attrs="{'invisible':['|','|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False),('delivery_method_count','=',1)]}"><i class="fa fa-arrow-right"/> Add to order</button>
+                                    <field name='delivery_rating_success' invisible="1" force_save="1"/>
+                                </div>
+                                <div class="alert alert-info" role="status" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
+                                    <field name='delivery_message' force_save="1"/>
+                                </div>
+                          </div>
                     </group>
                     <group>
                         <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
@@ -52,6 +184,9 @@
                         <field name="team_id" options="{'no_create': True}"/>
                         <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="vendor_application_type" />
+                        <field name="vendor_application_status" readonly="1" />
+                        <field name="vendor_application_flag" invisible="1" />
                     </group>
                 </group>
             </xpath>

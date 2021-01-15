@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_kanban" model="ir.ui.view">
+        <field name="name">project.project.kanban</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[@class='o_kanban_manage_toggle_button o_left']" position="replace">
+                <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+            </xpath>
+
+            <xpath expr="//div[@class='o_kanban_card_manage_pane dropdown-menu']" position="replace">
+                <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_user" role="menu">
+                    <div class="o_kanban_card_manage_section o_kanban_manage_reports">
+                        <div role="menuitem">
+                            <a name="%(portal.portal_share_action)d" type="action">Share</a>
+                        </div>
+                        <div role="menuitem">
+                            <a type="edit">Edit</a>
+                        </div>
+                        <div role="menuitem" t-if="record.rating_status.raw_value != 'no'">
+                            <a name="action_view_all_rating" type="object">Customer Ratings</a>
+                        </div>
+                    </div>
+                    <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

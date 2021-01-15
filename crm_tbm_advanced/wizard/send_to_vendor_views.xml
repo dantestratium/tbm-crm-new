@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_crm_send_vendor" model="ir.ui.view">
+        <field name="name">view.crm.send.vendor</field>
+        <field name="model">sale.order.send.vendor</field>
+        <field name="arch" type="xml">
+            <form string="Send Application to Loan Vendor">
+                <sheet>
+                    <notebook style="margin-top: -17px">
+                        <page string="Send Loan Application">
+                            <group>
+                                <field name="sale_order_id" invisible="1" />
+                                <field name="vendor_id" domain="[('category_id.name', '=', 'Loan Vendor')]" options='{"no_open": True, "no_create": True}' />
+                                <field name="attachment_ids" string="Uploaded Documents" options="{'no_create': True}" widget="many2many_binary" domain="[('res_model', '=', 'sale.order'), ('res_id', '=', sale_order_id), ('is_customer_docs', '=', True)]" colspan="2" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_quotation_send" context="{'default_attachments': attachment_ids}" string="Send by Email" class="btn-primary oe_read_only" type="object" />
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_send_application" model="ir.actions.act_window">
+        <field name="name">Loan Applications</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.send.vendor</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_send_vendor"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_type_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='col-6 o_kanban_primary_right']" position="replace">
+                <div class="col-6 o_kanban_primary_right">
+                    <div t-if="record.count_picking_ready.raw_value > 0" class="row">
+                    </div>
+
+                    <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary" name="get_action_picking_tree_waiting" type="object">
+                                <field name="count_picking_waiting"/> Waiting
+                            </button>
+                        </div>
+                    </div>
+
+                    <div t-if="record.count_picking_late.raw_value > 0" class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary" name="get_action_picking_tree_late" type="object">
+                                <field name="count_picking_late"/> Late
+                            </button>
+                        </div>
+                    </div>
+
+                    <div t-if="record.count_picking_backorders.raw_value > 0" class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary" name="get_action_picking_tree_backorder" type="object">
+                                <field name="count_picking_backorders"/> Back Orders
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="priority" eval="255"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page/field[@name='move_ids_without_package']/tree"
+                   position="attributes">
+                <attribute name="default_order">equipment_survey_name asc</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='move_ids_without_package']/tree/field[1]"
+                   position="before">
+                <field name="equipment_survey_name"/>
+            </xpath>
+            <xpath expr="//header/button[1]" position="after">
+                <field name="installation_status" invisible="1" />
+                <button name="%(crm_tbm_advanced.action_update_installation)d" context="{'default_stock_picking_id': id,'search_default_stock_picking_id': [id]}" attrs="{'invisible': ['|', '|', ('installation_status', 'in', ['pending', 'completed']), ('state', 'not in', ['done']), ('picking_type_code', '=', 'incoming')]}" string="Complete Installation" type="action" class="oe_highlight" groups="stock.group_stock_user, crm_tbm_advanced.group_tbm_installation"/>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='move_ids_without_package']" position="attributes">
+                <attribute name="context">{'picking_type_code': picking_type_code, 'default_picking_id': id,
+                'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id,
+                'default_picking_type_id': picking_type_id, 'default_location_id': location_id,
+                'default_location_dest_id': location_dest_id}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Customer</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="installer_id" domain="[('category_id.name', '=', 'Installer')]" attrs="{'invisible': ['|', ('state', 'not in', ['assigned', 'done']), ('picking_type_code', '=', 'incoming')]}" />
+                <label for="install_street" string="Installation Address" attrs="{'invisible': ['|', ('state', 'not in', ['assigned', 'done']), ('picking_type_code', '=', 'incoming')]}"/>
+                <div class="o_address_format">
+                    <field name="install_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="install_city" placeholder="City" class="o_address_city"/>
+                    <field name="install_state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                    <field name="install_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="attributes">
+                <attribute name="string">Installation Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="date_installed" invisible="1" />
+                <label for="installation_desc" />
+                <div class="o_row">
+                    <field name="installation_desc" attrs="{'invisible': ['|', ('state', 'not in', ['done']), ('picking_type_code', '=', 'incoming')]}" />
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="special_note" />
+            </xpath>
+            <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="class">btn-primary</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_send_confirmation_email']" position="attributes">
+                <attribute name="class">btn-primary</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_replenish" model="ir.ui.view">
+        <field name="name">Replenish</field>
+        <field name="model">product.replenish</field>
+        <field name="inherit_id" ref="stock.view_product_replenish" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/p" position="after">
+                <br />
+                <p class="text-danger">
+                    If you want to change the qty directly (without going through RFQ or MO), use <b>Update Qty on Hand</b> instead.
+                </p>
+                <br />
+            </xpath>
+        </field>
+    </record>
+</odoo>

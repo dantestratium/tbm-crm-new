@@ -5,30 +5,23 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[1]" position="before">
+                <button name="%(action_crm_new_survey)d" string="New Equipment Survey" type="action"
+                        context="{'default_crm_lead_id': id, 'default_crm_lead_partner': partner_id}" class="oe_highlight o_tour_new_equip" attrs="{'invisible': ['|', '|', ('type', '!=', 'opportunity'), ('crm_equipment_survey_ids', '!=', []), ('active', '=', False)]}"/>
+                <button name="%(action_crm_new_quotation)d" string="New Quotation" type="action"
+                        context="{'default_crm_lead_id': id, 'default_crm_lead_partner': partner_id}" class="oe_highlight o_tour_new_quote" attrs="{'invisible': ['|', '|', ('type', '!=', 'opportunity'), ('crm_equipment_survey_ids', '=', []), ('active', '=', False)]}"/>
+                <button name="%(action_crm_new_survey)d" string="Add Equipment Survey" type="action"
+                        context="{'default_crm_lead_id': id, 'default_crm_lead_partner': partner_id}" attrs="{'invisible': ['|', '|', ('type', '!=', 'opportunity'), ('crm_equipment_survey_ids', '=', []), ('active', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_set_won_rainbowman']" position="attributes">
+                <attribute name="class">btn-secondary</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='%(crm.crm_lead_lost_action)d']" position="attributes">
+                <attribute name="class">btn-secondary</attribute>
+            </xpath>
             <xpath expr="/form/sheet/notebook/page" position="before">
-                <page string="Equipment Survey">
+                <page string="Equipment Survey" class="o_tour_survey">
                     <field name="crm_equipment_survey_ids" />
-                    <group string="Stockroom">
-                        <group>
-                            <field name="stockroom_bottle" />
-                            <field name="stockroom_bottle_shelf" />
-                            <field name="stockroom_shelf" />
-                            <field name="stockroom_shelf_measurement" />
-                            <field name="stockroom_camera" />
-                            <field name="stockroom_shelf_material" />
-                        </group>
-                        <group>
-                            <field name="stockroom_switch" />
-                            <field name="stockroom_structure" />
-                            <field name="stockroom_source" />
-                            <field name="stockroom_unit" />
-                            <field name="stockroom_bottle_month" />
-                            <field name="stockroom_detail" widget="pad" />
-                        </group>
-                    </group>
-                    <group string="Server Room">
-                        <field name="server_description" widget="pad" />
-                    </group>
                 </page>
             </xpath>
         </field>
@@ -38,9 +31,10 @@
         <field name="name">tree.view.crm.tbm.equipment.survey</field>
         <field name="model">crm.equipment.survey</field>
         <field name="arch" type="xml">
-            <tree string="Bars">
+            <tree string="Equipment Surveys">
                 <field name="name" />
-                <field name="location" />
+                <field name="location" string="Where" />
+                <field name="type" />
             </tree>
         </field>
     </record>
@@ -49,43 +43,136 @@
         <field name="name">crm.tbm.equipment.survey.form</field>
         <field name="model">crm.equipment.survey</field>
         <field name="arch" type="xml">
-            <form string="Bar">
+            <form string="Equipment Survey" edit="true">
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="name" />
-                            <field name="status" widget="radio" options="{'horizontal': true}"/>
-                        </group>
-                        <group>
-                            <field name="location"/>
-                        </group>
-                    </group>
-                    <group string="Backbar">
-                        <group>
-                            <field name="back_bar_bottle" widget="integer"/>
-                            <field name="back_bar_shelf"/>
-                            <field name="back_bar_shelf_length"/>
-                            <field name="back_bar_shelf_depth"/>
-                            <field name="back_bar_shelf_height"/>
-                        </group>
-                        <group>
-                            <field name="back_bar_scale"/>
-                            <field name="back_bar_bottle_deep"/>
-                            <field name="back_bar_shelf_structure"/>
-                            <field name="back_bar_power_source"/>
-                            <field name="back_bar_area_size"/>
-                            <field name="back_bar_shelf_material"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="back_bar_detail" widget="pad"/>
-                    </group>
-                    <group>
-                        <field name="back_bar_description" widget="pad"/>
-                    </group>
-                    <group>
-                        <field name="back_bar_note" widget="pad"/>
-                    </group>
+                    <notebook style="margin-top: -17px">
+                        <page string="Survey">
+                            <group>
+                                <group>
+                                    <field name="type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="name" string="Bar Name" attrs="{'invisible': [('type', '=', 'stockroom')]}"/>
+                                    <field name="name" string="Stockroom Name" attrs="{'invisible': [('type', '=', 'bar')]}" />
+                                </group>
+                                <group>
+                                    <field name="location" string="Where"/>
+                                    <field name="status" attrs="{'invisible': [('type', '=', 'stockroom')]}"/>
+                                </group>
+                            </group>
+                            <group string="Back Bar" attrs="{'invisible': [('type', '=', 'stockroom')]}">
+                                <notebook>
+                                    <page string="Back Bar Survey">
+                                        <group>
+                                            <field name="back_bar_calculate_by" widget="radio" options="{'horizontal': true}" />
+                                            <field name="back_bar_bottle" attrs="{'invisible': [('back_bar_calculate_by', '=', 'shelf')]}"/>
+                                            <field name="back_bar_shelf_length" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}"/>
+                                            <field name="back_bar_shelf_depth" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}"/>
+                                            <field name="back_bar_shelf_height" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}"/>
+                                            <field name="back_bar_shelf"/>
+                                            <field name="back_bar_scale"/>
+                                            <field name="back_bar_shelf_structure"/>
+                                        </group>
+                                        <group>
+                                            <field name="back_bar_bottle_deep"/>
+                                            <field name="back_bar_power_source"/>
+                                            <field name="back_bar_area_size"/>
+                                            <field name="back_bar_shelf_material"/>
+                                        </group>
+                                        <group>
+                                            <field name="back_bar_detail" widget="pad"/>
+                                        </group>
+                                        <group>
+                                            <field name="back_bar_description" widget="pad"/>
+                                        </group>
+                                        <group>
+                                            <field name="back_bar_note" widget="pad"/>
+                                        </group>
+                                    </page>
+                                    <page string="Back Bar Calculation" class="o_tour_quote_calc" attrs="{'invisible': [('shelf_node', '&lt;=', 0)]}">
+                                        <group>
+                                            <div>
+                                                <h4 attrs="{'invisible': [('back_bar_calculate_by', '=', 'shelf')]}"><em>Calculating by No. of Bottles</em></h4>
+                                                <h4 attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}"><em>Calculating by Shelf Size</em></h4>
+                                            </div>
+                                            <field name="back_bar_bottle" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'shelf')]}"/>
+                                            <field name="total_shelf_length" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'shelf')]}" />
+                                            <field name="back_bar_shelf_length" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}" />
+                                            <field name="shelf_length_bottle" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}" />
+                                            <field name="back_bar_shelf_depth" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}" />
+                                            <field name="shelf_length_row" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}" />
+                                            <field name="total_shelf_device" readonly="1" force_save="1" attrs="{'invisible': [('back_bar_calculate_by', '=', 'bottle')]}" />
+                                            <field name="shelf_master" readonly="1" force_save="1"/>
+                                            <field name="shelf_node" readonly="1" force_save="1"/>
+                                            <field name="shelf_square" readonly="1" force_save="1"/>
+                                            <field name="back_bar_shelf" string="No. of Shelves" readonly="1" force_save="1" />
+                                            <field name="total_shelf_device_loc" readonly="1" force_save="1" />
+                                            <field name="shelf_master_loc" readonly="1" force_save="1" />
+                                            <field name="shelf_node_loc" readonly="1" force_save="1" />
+                                            <field name="square_loc" readonly="1" force_save="1" />
+                                            <field name="back_bar_scale" readonly="1" force_save="1" />
+                                            <field name="total_backbar" readonly="1" force_save="1" />
+                                            <field name="switch" readonly="1" force_save="1" />
+                                        </group>
+                                    </page>
+                                </notebook>
+                            </group>
+                            <group attrs="{'invisible': [('type', '=', 'bar')]}">
+                                <notebook>
+                                    <page string="Stockroom Survey">
+                                        <group>
+                                            <field name="stockroom_calculate_by" widget="radio" options="{'horizontal': true}" />
+                                            <field name="stockroom_bottle" attrs="{'invisible': [('stockroom_calculate_by', '=', 'shelf')]}" />
+                                            <field name="stockroom_shelf_length" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stockroom_shelf_depth" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stockroom_shelf_height" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stockroom_shelf" />
+                                            <field name="stockroom_camera" />
+                                            <field name="stockroom_unit" />
+                                            <field name="stockroom_structure" />
+                                        </group>
+                                        <group>
+                                            <field name="stockroom_bottle_shelf" />
+                                            <field name="stockroom_source" />
+                                            <field name="stockroom_bottle_month" />
+                                            <field name="stockroom_shelf_material" />
+                                            <field name="stockroom_detail" widget="pad" />
+                                        </group>
+                                        <group>
+                                            <field name="server" widget="integer" />
+                                            <field name="server_description" widget="pad" />
+                                        </group>
+                                    </page>
+                                    <page string="Stockroom Calculation" class="o_tour_quote_calc" attrs="{'invisible': [('stock_shelf_node', '&lt;=', 0)]}">
+                                        <field name="stockroom_calculate_by" invisible="1"/>
+                                        <group>
+                                            <div>
+                                                <h4 attrs="{'invisible': [('stockroom_calculate_by', '=', 'shelf')]}"><em>Calculating by No. of Bottles</em></h4>
+                                                <h4 attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}"><em>Calculating by Shelf Size</em></h4>
+                                            </div>
+                                            <field name="stockroom_bottle" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'shelf')]}"/>
+                                            <field name="stock_total_shelf_length" readonly="1" force_save="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'shelf')]}" />
+                                            <field name="stockroom_shelf_length" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stock_shelf_length_bottle" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stockroom_shelf_depth" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stock_shelf_length_row" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stock_total_shelf_device" force_save="1" readonly="1" attrs="{'invisible': [('stockroom_calculate_by', '=', 'bottle')]}" />
+                                            <field name="stock_shelf_master" force_save="1" readonly="1" />
+                                            <field name="stock_shelf_node" force_save="1" readonly="1" />
+                                            <field name="stock_shelf_square" readonly="1" force_save="1" />
+                                            <field name="stockroom_shelf" string="No. of Shelves" readonly="1" force_save="1" />
+                                            <field name="stock_total_shelf_device_loc" readonly="1" force_save="1" />
+                                            <field name="stock_shelf_master_loc" readonly="1" force_save="1" />
+                                            <field name="stock_shelf_node_loc" readonly="1" force_save="1" />
+                                            <field name="stock_square_loc" readonly="1" force_save="1" />
+                                            <field name="stockroom_unit" readonly="1" force_save="1" />
+                                            <field name="stockroom_camera" readonly="1" force_save="1" />
+                                            <field name="stock_total_backbar" readonly="1" force_save="1" />
+                                            <field name="stock_switch" readonly="1" force_save="1" />
+                                        </group>
+                                    </page>
+                                </notebook>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
