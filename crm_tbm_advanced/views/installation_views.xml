@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_partner_for_installation" model="ir.actions.act_window">
+        <field name="name">Installations</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="groups_id" eval="[(4, ref('crm_tbm_advanced.group_tbm_installation'))]"/>
+        <field name="domain">[('installer_id.user_id','=',uid)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            There is no installation order for you yet.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Installations" id="menu_installation" sequence="10"
+            action="action_partner_for_installation"
+            web_icon="fleet,static/description/icon.png"
+            />
+</odoo>

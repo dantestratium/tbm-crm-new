@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="sale_backorder.menu_so_backorder"
+              action="sale_backorder.action_so_backorder"
+              parent="sale.sale_order_menu"
+              groups="stock.group_stock_manager"
+              sequence="11"/>
+    <menuitem id="sale_backorder.menu_so_backorder_report"
+              action="sale_backorder.action_so_backorder_wizard"
+              parent="sale.sale_order_menu"
+              groups="stock.group_stock_manager"
+              sequence="12"/>
+</odoo>

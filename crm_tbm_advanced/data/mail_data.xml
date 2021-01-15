@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="message_lead_converted">
+        <p style="margin: 0px;">
+            <span style="margin-top: 8px;">Lead <t t-esc="object.name_get()[0][1]"/> has been converted to Opportunity.</span>
+        </p>
+        <p style="margin-top: 24px; margin-bottom: 16px;">
+            <a t-att-href="'/web#id=%s&amp;action=540&amp;model=%s&amp;view_type=form&amp;menu_id=352' % (object.id, object._name)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+                    View <t t-esc="model_description or 'document'"/>
+            </a>
+        </p>
+    </template>
+    <template id="message_so_confirmed">
+        <p style="margin: 0px;">
+            <span style="margin-top: 8px;">Sales Order <t t-esc="object.name_get()[0][1]"/> has been confirmed.</span>
+        </p>
+        <p style="margin-top: 24px; margin-bottom: 16px;">
+            <a t-att-href="'/web#id=%s&amp;action=573&amp;model=%s&amp;view_type=form&amp;menu_id=375' % (object.id, object._name)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+                    View <t t-esc="model_description or 'document'"/>
+            </a>
+        </p>
+    </template>
+    <template id="message_ready_delivery">
+        <p style="margin: 0px;">
+            <span style="margin-top: 8px;">Invoice payment for Sales Order <t t-esc="object.name_get()[0][1]"/> has been confirmed. Please prepare for delivery.</span>
+        </p>
+        <p style="margin-top: 24px; margin-bottom: 16px;">
+            <a t-att-href="'/web#id=%s&amp;action=206&amp;model=%s&amp;view_type=form&amp;menu_id=375' % (object.id, object._name)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+                    View <t t-esc="model_description or 'document'"/>
+            </a>
+        </p>
+    </template>
+    <template id="message_done_delivery">
+        <p style="margin: 0px;">
+            <span style="margin-top: 8px;">Installation is complete for Sales Order <t t-esc="object.name_get()[0][1]"/>.</span>
+        </p>
+        <p style="margin-top: 24px; margin-bottom: 16px;">
+            <a t-att-href="'/web#id=%s&amp;action=206&amp;model=%s&amp;view_type=form&amp;menu_id=375' % (object.id, object._name)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+                    View <t t-esc="model_description or 'document'"/>
+            </a>
+        </p>
+    </template>
+    <!-- Template and notification section -->
+    <data noupdate="1">
+        <record id="email_invoice_to_loan_vendor" model="mail.template">
+            <field name="name">Invoice: Send by email to loan vendor</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.loan_vendor_id.id}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.loan_vendor_id.name},
+                        <br/>
+                        <br/>
+                        <br/>
+                        Attached is the invoice for the purchase of The BarMaster system for ${object.partner_id.name}.
+                        <br/>
+                        <br/>
+                        Please remit fifty percent (50%) of the total amount. Once installation is complete, we will invoice you for the remaining balance.
+                        <br/>
+                        <br/>
+                        Should you have any questions, please feel free to contact us.
+                        <br/>
+                        <br/>
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a href="/my/invoices/${object.id}?access_token=${object.access_token}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                Contact Us
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        Thank you.
+                        <br/>
+                        The BarMaster Team
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="account.account_invoices"/>
+            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_invoice_payment" model="mail.template">
+            <field name="name">Invoice: initial payment from vendor</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.partner_id.name},
+                        <br/>
+                        <br/>
+                        <br/>
+                        We have received the down payment of fifty percent (50%) from <b>${object.loan_vendor_id.name}</b> in the amount of $${ctx.get('payment')}. The balance will be paid upon completion of installation.
+                        <br/>
+                        <br/>
+                        We are sending your credentials so you can start customizing your system. By the time your hardware is installed, you’ll be ready to go.
+                        <br/>
+                        <br/>
+                        We have built-in a prompter that will guide you through the initialization process. Please enter all pertinent information to ensure your system is as accurate as possible.
+                        <br/>
+                        <br/>
+                        In order to keep your system as secure as possible, do not share passwords and other data with unauthorized personnel.
+                        <br/>
+                        <br/>
+                        Should you have any questions, please feel free to contact us.
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a href="/my/invoices/${ctx.get('invoice_id')}?access_token=${ctx.get('invoice_token')}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                Contact Us
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        Welcome to <b>The BarMaster</b> way.
+                        <br/>
+                        <br/>
+                        Thank you.
+                        <br/>
+                        The BarMaster Team
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="account.account_invoices"/>
+            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_install_details" model="mail.template">
+            <field name="name">Installation: Details</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="email_from">${object.partner_id.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">${object.company_id.name} Installation Notice</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${object.partner_id.name},
+                        <br/>
+                        <br/>
+                        <br/>
+                        We are pleased to inform you that you will be receiving <b>The BarMaster</b> hardware for installation soon. Please keep all materials together in a secure and dry location and verify all items received against the packing list with each shipment. Do <b>NOT</b> open the boxes.
+                        <br/>
+                        <br/>
+                        Should there be any discrepancies or issues, please contact us right away.
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a href="#" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                Contact Us
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        Our installation team will be contacting you to confirm installation details.
+                        <br/>
+                        <br/>
+                        Thank you for choosing The BarMaster.
+                        <br/>
+                        <br/>
+                        The BarMaster Team
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="stock.action_report_delivery"/>
+            <field name="report_name">Delivery Slip</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_edi_sale_vendor" model="mail.template">
+            <field name="name">Sales Order: Send to vendor</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${ctx.get('vendor_id')}</field>
+            <field name="subject">${object.company_id.name} Vendor Application (Ref ${object.name or 'n/a' })</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <b>${object.establishment_name}</b><br/>
+                        ${object.partner_id.email}<br/>
+                        ${object.partner_id.phone}<br/>
+                        <br/>
+                        <br/>
+                        Our customer is requesting a loan to purchase The BarMaster system.
+                        <br/><br/>
+                        Attached are the customer’s credit information and a copy of our quotation.
+                        <br/><br/>
+                        Please click on the link below  to contact us with any questions and to give us loan status information.
+                        <br/><br/>
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a href="/my/orders/${object.id}?access_token=${object.access_token}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                                Contact Us
+                            </a>
+                        </div>
+                        <br/>
+                        <br/>
+                        Thank you.
+                        <br/>
+                        The BarMaster Team
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="sale.action_report_saleorder"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_sub_license_notif" model="mail.template">
+            <field name="name">Subscription License: Notification</field>
+            <field name="model_id" ref="crm_tbm_advanced.model_tbm_subscription_license"/>
+            <field name="email_from">${object.partner_id.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Subscription Notification - ${object.partner_id.user_id.company_id.name}</field>
+            <field name="body_html" type="html">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear ${object.partner_id.firstname},<br /><br />
+                    % if not ctx.get('notif_count') and not ctx.get('success'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Please be advised that your <b>license subscription</b> will end on ${ctx.get('expire_on')}.
+                    </p>
+                    % endif
+                    % if not ctx.get('notif_count') and ctx.get('success'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Thank you! Your <b>license subscription</b> has been renewed.
+                    </p>
+                    % endif
+                    % if ctx.get('expired'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Your <b>license subscription</b> has expired. Click on the link below to view and process your payment.
+                    </p>
+                    <div style="margin: 16px 0px 16px 0px;">
+                        <a href="/my/invoices/${ctx['invoice_id']}?access_token=${ctx['access_token']}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            View Invoice
+                        </a>
+                    </div>
+                    % endif
+                    % if ctx.get('notif_count') and not ctx.get('expired'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Your <b>license subscription</b> is about to expire. Please renew within <b>${ctx.get('expire_on')}</b> days. Click on the link below to view and process your payment.
+                    </p>
+                    <div style="margin: 16px 0px 16px 0px;">
+                        <a href="/my/invoices/${ctx['invoice_id']}?access_token=${ctx['access_token']}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            View Invoice
+                        </a>
+                    </div>
+                    % endif
+                    <br /><b />
+                    Do not hesitate to contact us if you have any questions.<br /><b />
+                    <b>${object.partner_id.user_id.company_id.name}</b>
+                </p>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_sub_warranty_notif" model="mail.template">
+            <field name="name">Subscription Warranty: Notification</field>
+            <field name="model_id" ref="crm_tbm_advanced.model_tbm_subscription_warranty"/>
+            <field name="email_from">${object.partner_id.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Subscription Notification - ${object.partner_id.user_id.company_id.name}</field>
+            <field name="body_html" type="html">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear ${object.partner_id.firstname},<br /><br />
+                    % if not ctx.get('notif_count') and not ctx.get('success'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Please be advised that your <b>warranty</b> will end on ${ctx.get('expire_on')}.
+                    </p>
+                    % endif
+                    % if not ctx.get('notif_count') and ctx.get('success'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Thank you! Your <b>warranty</b> has been renewed.
+                    </p>
+                    % endif
+                    % if ctx.get('expired'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Your <b>license subscription</b> has expired. Click on the link below to view and process your payment.
+                    </p>
+                    <div style="margin: 16px 0px 16px 0px;">
+                        <a href="/my/invoices/${ctx['invoice_id']}?access_token=${ctx['access_token']}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            View Invoice
+                        </a>
+                    </div>
+                    % endif
+                    % if ctx.get('notif_count') and not ctx.get('expired'):
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Your <b>warranty</b> is about to expire. Please renew within <b>${ctx.get('expire_on')}</b> days. Click on the link below to view and process your payment.
+                    </p>
+                    <div style="margin: 16px 0px 16px 0px;">
+                        <a href="/my/invoices/${ctx['invoice_id']}?access_token=${ctx['access_token']}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">
+                            View Invoice
+                        </a>
+                    </div>
+                    % endif
+                    <br /><b />
+                    Do not hesitate to contact us if you have any questions.<br /><b />
+                    <b>${object.partner_id.user_id.company_id.name}</b>
+                </p>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

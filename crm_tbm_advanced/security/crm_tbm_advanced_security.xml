@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_crm_underwriting" model="res.groups">
+        <field name="name">Underwriting Officer</field>
+        <field name="comment">the user will have an access to the documents of the sales channel he/she belongs to.</field>
+        <field name="category_id" ref="base.module_category_crm"/>
+        <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tbm_api_resend_tree" model="ir.ui.view">
+        <field name="model">tbm.api.resend</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="is_sent"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tbm_api_resend_search" model="ir.ui.view">
+        <field name="model">tbm.api.resend</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="is_sent"/>
+            </search>
+        </field>
+    </record>
+
+    <act_window
+        name="TBM API Resend"
+        id="action_tbm_api_resend_form"
+        res_model="tbm.api.resend"/>
+
+    <menuitem
+        parent="base.next_id_9"
+        action="action_tbm_api_resend_form"
+        id="tbm_api_resend_menu"/>
+</odoo>

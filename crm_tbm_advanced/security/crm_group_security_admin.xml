@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_crm_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="crm_tbm_advanced.crm_category"/>
+        <field name="implied_ids" eval="[(4, ref('group_crm_manager'))]"/>
+        <field name="comment">the user will have access to all data in the CRM application.</field>
+    </record>
+</odoo>

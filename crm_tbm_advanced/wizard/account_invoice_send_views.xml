@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_send_wizard_form">
+            <field name="name">account.invoice.send.form</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='option_email']" position="after">
+                    <div name="option_vendor">
+                        <field name="is_send_vendor" />
+                        <b><label for="is_send_vendor"/></b>
+                        <div name="info_form" attrs="{'invisible': ['|', '|', ('is_email', '=', False), ('is_send_vendor', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">
+                            Also send a separate email to selected loan vendor
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

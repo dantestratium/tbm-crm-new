@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_stock_installation" model="ir.ui.view">
+        <field name="name">view.stock.installation</field>
+        <field name="model">stock.picking.installation</field>
+        <field name="arch" type="xml">
+            <form string="Assign to Team">
+                <group>
+                    <field name="stock_picking_id" invisible="1" />
+                    <field name="date_installed" />
+                </group>
+                <footer>
+                    <button name="button_update_installation" context="{'stock_picking_id': stock_picking_id, 'date_installed': date_installed}" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="backorder_id" position="after">
+                <field name="installation_status"/>
+            </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-success">installation_status == 'completed'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_update_installation" model="ir.actions.act_window">
+        <field name="name">Update Installation Status</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.picking.installation</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_installation"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

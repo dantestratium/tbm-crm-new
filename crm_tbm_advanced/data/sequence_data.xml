@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="vendor_application_code_seq" model="ir.sequence">
+        <field name="name">CRM Vendor Application</field>
+        <field name="code">crm.vendor.application</field>
+        <field name="prefix">VND</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="sub_license_code_seq" model="ir.sequence">
+        <field name="name">Subscription License</field>
+        <field name="code">tbm.subscription.license</field>
+        <field name="prefix">SUBL</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="sub_warranty_code_seq" model="ir.sequence">
+        <field name="name">Subscription Warranty</field>
+        <field name="code">tbm.subscription.warranty</field>
+        <field name="prefix">SUBW</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="sub_renew_code_seq" model="ir.sequence">
+        <field name="name">Subscription Renew</field>
+        <field name="code">subscription.renew</field>
+        <field name="prefix">SUBR</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>

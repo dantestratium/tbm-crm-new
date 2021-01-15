@@ -10,10 +10,13 @@
     'depends': [
         'crm',
         'sale',
+        'sale_management'
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/crm_lead_views.xml'
+        'views/crm_lead_views.xml',
+        'templates/report_saleorder.xml',
+        'wizard/new_quotation_views.xml'
     ],
     'qweb': ['static/src/xml/*.xml']
 }

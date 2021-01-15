@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tbm_subscription_license_tree" model="ir.ui.view">
+        <field name="name">tbm.subscription.license.tree</field>
+        <field name="model">tbm.subscription.license</field>
+        <field name="arch" type="xml">
+            <tree default_order="write_date desc" decoration-muted="status == 'inactive'" decoration-warning="status == 'expiring'" decoration-info="status == 'active'" create="false">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="plan_id" />
+                <field name="status" />
+                <field name="date_start" />
+                <field name="date_end" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tbm_subscription_license_form" model="ir.ui.view">
+        <field name="name">tbm.subscription.license.form</field>
+        <field name="model">tbm.subscription.license</field>
+        <field name="arch" type="xml">
+            <form string="Software License Subscription">
+                <header>
+                    <button name="test_notif" class="btn-primary" type="object" string="Test Notif"/>
+                    <button name="test_invoice" class="btn-primary" type="object" string="Test Invoice"/>
+                    <button name="test_api" class="btn-primary" type="object" string="Test API"/>
+                    <button name="test_api1" class="btn-primary" type="object" string="Test Sub API"/>
+                    <field name="status" widget="statusbar" clickable="False"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Title"/>
+                        <h1><field name="name" placeholder="Describe the subscription..." required="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" />
+                            <field name="plan_id" required="1" attrs="{'readonly': [('status', '=', 'active')]}" create="False" />
+                            <field name="date_start" attrs="{'readonly': [('id', '>', 0)]}" autocomplete="off" />
+                            <field name="date_end" />
+                            <field name="notif_count" />
+                            <field name="date_end_desc" attrs="{'invisible': [('id', '&lt;=', 0)]}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Invoices">
+                            <field name="account_invoice_ids" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tbm_subscription_warranty_tree" model="ir.ui.view">
+        <field name="name">tbm.subscription.warranty.tree</field>
+        <field name="model">tbm.subscription.warranty</field>
+        <field name="arch" type="xml">
+            <tree default_order="id desc" decoration-muted="status == 'inactive'" decoration-warning="status == 'expiring'" decoration-info="status == 'active'" create="false">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="plan_id" />
+                <field name="status" />
+                <field name="date_start" />
+                <field name="date_end" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tbm_subscription_warranty_form" model="ir.ui.view">
+        <field name="name">tbm.subscription.warranty.form</field>
+        <field name="model">tbm.subscription.warranty</field>
+        <field name="arch" type="xml">
+            <form string="Warranty Subscription">
+                <header>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Title"/>
+                        <h1><field name="name" placeholder="Describe the subscription..." required="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" required="1" />
+                            <field name="plan_id" required="1" attrs="{'readonly': [('status', '=', 'active')]}" create="False" />
+                            <field name="date_start" attrs="{'readonly': [('id', '>', 0)]}" autocomplete="off" />
+                            <field name="date_end" readonly="1" force_save="1" attrs="{'invisible': [('id', '>', 0)]}" />
+                            <field name="date_end_desc" attrs="{'invisible': [('id', '&lt;=', 0)]}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Invoices">
+                            <field name="account_invoice_ids" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tbm_subscription_plan_tree" model="ir.ui.view">
+        <field name="name">tbm.subscription.plan.tree</field>
+        <field name="model">tbm.subscription.plan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="type" />
+                <field name="name" />
+                <field name="period" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tbm_subscription_plan_form" model="ir.ui.view">
+        <field name="name">tbm.subscription.plan.form</field>
+        <field name="model">tbm.subscription.plan</field>
+        <field name="arch" type="xml">
+            <form string="Subscription Plan">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Title"/>
+                        <h1><field name="name" placeholder="Describe the subscription..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id" />
+                            <field name="sequence" />
+                            <field name="type" required="1" />
+                            <field name="period" required="1" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <act_window
+        name="Software License"
+        id="action_tbm_subscription_license"
+        res_model="tbm.subscription.license"/>
+
+    <act_window
+        name="Warranty"
+        id="action_tbm_subscription_warranty"
+        res_model="tbm.subscription.warranty"/>
+
+    <act_window
+        name="Subscription Plans"
+        id="action_tbm_subscription_plan"
+        res_model="tbm.subscription.plan"/>
+
+    <menuitem id="menu_tbm_subscription" name="Subscriptions"
+              groups="sales_team.group_sale_salesman"
+              parent="sale.sale_menu_root" sequence="2" />
+
+    <menuitem name="Software License" id="menu_tbm_subscription_license"
+              parent="menu_tbm_subscription" action="action_tbm_subscription_license" sequence="1"/>
+
+    <menuitem name="Warranty" id="menu_tbm_subscription_warranty"
+              parent="menu_tbm_subscription" action="action_tbm_subscription_warranty" sequence="2"/>
+
+    <menuitem name="Subscription Plans" id="menu_tbm_subscription_plan"
+              parent="sale.menu_sale_config" action="action_tbm_subscription_plan" sequence="1"/>
+</odoo>
